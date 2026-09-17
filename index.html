@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#173b3f" />
+    <title>班表簿｜請假統計</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark">線路</span>
+          <div><strong>請假統計</strong><small>團隊休假管理 · v1.0.0</small></div>
+        </div>
+        <div class="sidebar-date"><span id="todayLabel"></span><strong id="todayWeekday"></strong></div>
+        <nav class="main-nav" aria-label="主要功能">
+          <button class="nav-item active" data-view="overview"><span class="nav-icon">◈</span>請假</button>
+          <button class="nav-item" data-view="people"><span class="nav-icon">♧</span>管理</button>
+          <button class="nav-item" data-view="current"><span class="nav-icon">▤</span>假單</button>
+          <button class="nav-item" data-view="history"><span class="nav-icon">◷</span>歷史</button>
+          <button class="nav-item" data-view="logs"><span class="nav-icon">≡</span>異動</button>
+        </nav>
+        <div class="sidebar-note"><span class="status-dot"></span><span>本機資料模式<br /><small>可直接開始登記</small></span></div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="mobile-brand"><span class="brand-mark">線路</span><strong>請假統計</strong></div>
+          <div class="topbar-actions"><button class="icon-button" id="refreshButton" title="重新整理資料">↻</button><button class="avatar-button" title="目前工作區">柏</button></div>
+        </header>
+
+        <section class="view active" id="view-overview">
+          <div class="page-heading"><div><p class="eyebrow">LEAVE DESK / 01</p><h1>今天，誰不在？</h1><p class="subheading">快速登記團隊的休假，讓每個人的時間都清楚可見。</p></div><div class="heading-date"><span id="headingDate"></span><strong id="headingWeekday"></strong></div></div>
+          <div class="stat-strip stat-strip-compact"><div><span>今日請假</span><strong id="todayCount">0</strong><small>人</small></div><div><span>本週假單</span><strong id="weekCount">0</strong><small>筆</small></div></div>
+          <div class="content-grid">
+            <form class="panel leave-form" id="leaveForm">
+              <div class="panel-heading"><div><span class="section-kicker">NEW ENTRY</span><h2 id="formTitle">新增請假紀錄</h2></div><span class="form-step">01 / 02</span></div>
+              <input type="hidden" id="editingId" />
+              <label>請假人員 <span class="required">*</span><div id="employeePicker" class="employee-picker"></div><select id="employeeSelect" class="visually-hidden" required multiple></select><small class="helper">可多選請假人員</small></label>
+              <div class="form-row"><label>常用假別<select id="leaveTypeSelect"></select></label><label>自訂假別<input id="customType" type="text" placeholder="輸入其他假別" /></label></div>
+              <div class="quick-row"><span>日期快選</span><button type="button" class="quick-button" data-date-offset="0">今日</button><button type="button" class="quick-button" data-date-offset="1">明日</button><button type="button" class="quick-button" data-date-offset="2">後天</button></div>
+              <div class="form-row"><label>開始日期 <span class="required">*</span><input id="startDate" type="date" required /></label><label>結束日期 <span class="required">*</span><input id="endDate" type="date" required /></label></div>
+              <div class="quick-row"><span>時間快選</span><button type="button" class="quick-button" data-time-preset="full">全日</button><button type="button" class="quick-button" data-time-preset="morning">上半天</button><button type="button" class="quick-button" data-time-preset="afternoon">下半天</button></div>
+              <div class="form-row"><label>開始時間<input id="startTime" type="time" value="08:00" required /></label><label>結束時間<input id="endTime" type="time" value="17:00" required /></label></div>
+              <p class="warning" id="overlapWarning"></p><div class="form-actions"><button class="button button-ghost" type="button" id="cancelEdit">清除</button><button class="button button-primary" type="submit"><span>＋</span><span id="submitLabel">建立假單</span></button></div>
+            </form>
+            <section class="panel today-panel"><div class="panel-heading"><div><span class="section-kicker">TODAY</span><h2>今日請假統計</h2></div><button class="text-button" data-view-link="current">查看全部 →</button></div><div id="upcomingList" class="upcoming-list"></div></section>
+          </div>
+        </section>
+
+        <section class="view" id="view-people"><div class="page-heading"><div><p class="eyebrow">SETTINGS / 02</p><h1>人員與假別</h1><p class="subheading">整理團隊名單與常用假別。</p></div><button class="button button-primary" id="unlockAdmin">管理設定</button></div><div id="adminArea" class="admin-area locked"><div class="locked-message"><span class="lock-icon">⌑</span><h2>管理設定已鎖定</h2><p>輸入管理密碼後管理人員與假別。</p><button class="button button-dark" id="unlockAdminInside">輸入管理密碼</button></div></div></section>
+
+        <section class="view" id="view-current"><div class="page-heading"><div><p class="eyebrow">LIVE BOARD / 03</p><h1>目前假單</h1><p class="subheading">只顯示今天起仍然有效的假單。</p></div><div class="filter-group"><input type="search" id="currentSearch" placeholder="搜尋人員或假別" /><button class="button button-ghost" id="exportCurrent">匯出 CSV</button></div></div><div id="currentList" class="date-list"></div></section>
+
+        <section class="view" id="view-history"><div class="page-heading"><div><p class="eyebrow">ARCHIVE / 04</p><h1>歷史假單</h1><p class="subheading">過往的團隊休假紀錄，都留在這裡。</p></div><div class="filter-group"><input type="search" id="historySearch" placeholder="搜尋人員或假別" /><button class="button button-ghost" id="exportHistory">匯出 CSV</button></div></div><div id="historyDeleteControls" class="filter-group admin-delete-controls hidden"><input type="date" id="historyDeleteDate" /><button class="button button-ghost" id="deleteHistoryByDate">刪除指定日</button><input type="month" id="historyDeleteMonth" /><button class="button button-ghost" id="deleteHistoryByMonth">刪除指定月</button></div><div id="historyList" class="date-list"></div></section>
+
+        <section class="view" id="view-logs"><div class="page-heading"><div><p class="eyebrow">AUDIT TRAIL / 05</p><h1>異動紀錄</h1><p class="subheading">所有新增、修改、刪除與還原，都會在這裡留下足跡。</p></div><button class="button button-ghost" id="exportLogs">匯出紀錄</button></div><div id="logDeleteControls" class="filter-group admin-delete-controls hidden"><input type="date" id="logDeleteDate" /><button class="button button-ghost" id="deleteLogsByDate">刪除指定日</button><input type="month" id="logDeleteMonth" /><button class="button button-ghost" id="deleteLogsByMonth">刪除指定月</button></div><div id="logsList" class="logs-list"></div></section>
+      </main>
+    </div>
+    <div id="toast" class="toast" role="status"></div>
+    <div id="modalRoot"></div>
+    <script src="app.js"></script>
+    <script>
+      document.addEventListener('click', event => {
+        const chip = event.target.closest('[data-employee]');
+        if (chip) {
+          const option = [...document.querySelector('#employeeSelect').options].find(item => item.value === chip.dataset.employee);
+          option.selected = !option.selected;
+          chip.classList.toggle('selected', option.selected);
+        }
+        const dateQuick = event.target.closest('[data-date-offset]');
+        if (dateQuick) {
+          const date = new Date();
+          date.setDate(date.getDate() + Number(dateQuick.dataset.dateOffset));
+          const value = date.toISOString().slice(0, 10);
+          document.querySelector('#startDate').value = value;
+          document.querySelector('#endDate').value = value;
+        }
+        const timeQuick = event.target.closest('[data-time-preset]');
+        if (timeQuick) {
+          const presets = {full: ['08:00', '17:00'], morning: ['08:00', '12:00'], afternoon: ['13:00', '17:00']};
+          const [start, end] = presets[timeQuick.dataset.timePreset];
+          document.querySelector('#startTime').value = start;
+          document.querySelector('#endTime').value = end;
+        }
+      });
+      document.querySelector('#leaveTypeSelect').addEventListener('change', event => {
+        if (event.target.value) document.querySelector('#customType').value = '';
+      });
+      document.querySelector('#customType').addEventListener('input', event => {
+        if (event.target.value.trim()) document.querySelector('#leaveTypeSelect').value = '';
+      });
+    </script>
+  </body>
+</html>
