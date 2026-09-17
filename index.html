@@ -46,7 +46,7 @@
               <div class="quick-row"><span>日期快選</span><button type="button" class="quick-button" data-date-offset="0">今日</button><button type="button" class="quick-button" data-date-offset="1">明日</button><button type="button" class="quick-button" data-date-offset="2">後天</button></div>
               <div class="form-row"><label>開始日期 <span class="required">*</span><input id="startDate" type="date" required /></label><label>結束日期 <span class="required">*</span><input id="endDate" type="date" required /></label></div>
               <div class="quick-row"><span>時間快選</span><button type="button" class="quick-button" data-time-preset="full">全日</button><button type="button" class="quick-button" data-time-preset="morning">上半天</button><button type="button" class="quick-button" data-time-preset="afternoon">下半天</button></div>
-              <div class="form-row"><label>開始時間<input id="startTime" type="time" value="08:00" required /></label><label>結束時間<input id="endTime" type="time" value="17:00" required /></label></div>
+              <div class="form-row"><label>開始時間<input id="startTime" lang="en-GB" type="time" step="60" value="08:00" required /></label><label>結束時間<input id="endTime" lang="en-GB" type="time" step="60" value="17:00" required /></label></div>
               <p class="warning" id="overlapWarning"></p><div class="form-actions"><button class="button button-ghost" type="button" id="cancelEdit">清除</button><button class="button button-primary" type="submit"><span>＋</span><span id="submitLabel">建立假單</span></button></div>
             </form>
             <section class="panel today-panel"><div class="panel-heading"><div><span class="section-kicker">TODAY</span><h2>今日請假統計</h2></div><button class="text-button" data-view-link="current">查看全部 →</button></div><div id="upcomingList" class="upcoming-list"></div></section>
@@ -94,6 +94,9 @@
       });
       document.querySelector('#customType').addEventListener('input', event => {
         if (event.target.value.trim()) document.querySelector('#leaveTypeSelect').value = '';
+      });
+      document.querySelector('#startDate').addEventListener('change', event => {
+        document.querySelector('#endDate').value = event.target.value;
       });
       document.querySelector('#refreshButton').onclick = () => hydrateFromDatabase(true);
       hydrateFromDatabase();
