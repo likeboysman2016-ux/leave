@@ -95,6 +95,8 @@
       document.querySelector('#customType').addEventListener('input', event => {
         if (event.target.value.trim()) document.querySelector('#leaveTypeSelect').value = '';
       });
+      document.querySelector('#refreshButton').onclick = () => hydrateFromDatabase(true);
+      hydrateFromDatabase();
     </script>
   </body>
 </html>
