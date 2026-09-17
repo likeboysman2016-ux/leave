@@ -30,4 +30,5 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--teal);backg
 .eyebrow,.section-kicker{letter-spacing:.12em}
 .log-row{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:12px}.log-row .card-button{justify-self:end;color:#a36a61}.log-row .card-button:hover{color:#c24e43;background:#fff1ee}
 .leave-card-main{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.leave-card-main>strong{white-space:nowrap}.leave-card-meta{margin-top:0;white-space:nowrap}
+.date-list .leave-card{padding:6px 10px;min-height:0}.date-list .leave-card-main{gap:8px;font-size:13px}.date-list .leave-card-meta{font-size:11px}.date-list .leave-card-actions{gap:0}.date-list .card-button{padding:3px 5px;font-size:18px;line-height:1}
 @media(max-width:560px){.panel::before{height:2px}.brand-mark{width:38px;height:38px;border-radius:12px}.mobile-brand{gap:9px}.mobile-brand strong{font-size:15px}}
