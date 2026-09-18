@@ -89,12 +89,6 @@
           document.querySelector('#endTime').value = end;
         }
       });
-      document.querySelector('#leaveTypeSelect').addEventListener('change', event => {
-        if (event.target.value) document.querySelector('#customType').value = '';
-      });
-      document.querySelector('#customType').addEventListener('input', event => {
-        if (event.target.value.trim()) document.querySelector('#leaveTypeSelect').value = '';
-      });
       document.querySelector('#startDate').addEventListener('change', event => {
         document.querySelector('#endDate').value = event.target.value;
       });
