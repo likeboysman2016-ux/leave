@@ -77,7 +77,7 @@
         if (dateQuick) {
           const date = new Date();
           date.setDate(date.getDate() + Number(dateQuick.dataset.dateOffset));
-          const value = date.toISOString().slice(0, 10);
+          const value = iso(date);
           document.querySelector('#startDate').value = value;
           document.querySelector('#endDate').value = value;
         }
